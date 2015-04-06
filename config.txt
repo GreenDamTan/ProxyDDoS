@@ -1,0 +1,13 @@
+{
+    "forver": 0.2,
+    "target":
+        [
+            "http://example/search?keyword=",
+            "target2",
+            "target3"
+        ],
+    "host": "",
+    "thread": 50,
+    "bypasscache": 1,
+    "append_rnd_val": 1
+}

