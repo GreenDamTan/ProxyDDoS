@@ -5,10 +5,10 @@ import time
 import threading
 import random
 class Proxy(object):
-    def __init__(self, ip, port, valid_time = time.time()):
+    def __init__(self, ip, port):
         self.ip = ip
         self.port = port
-        self.valid_time = valid_time
+        self.valid_time = time.time()
 
     def __eq__(self, other):
         if self.ip == other.ip and self.port == other.port:
