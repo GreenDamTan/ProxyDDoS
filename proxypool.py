@@ -21,7 +21,7 @@ class ProxyPool():
 
     def __init__(self):
         self.lst_proxy = []
-        self.max_valid_time = 30 * 60
+        self.max_valid_time = 10 * 60
         self.lock = threading.Lock()
 
     @staticmethod
